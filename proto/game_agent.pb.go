@@ -884,15 +884,16 @@ func (x *ScreenshotRequest) GetExecutionId() string {
 
 // ScreenshotResponse 截图响应
 type ScreenshotResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
-	Step          int32                  `protobuf:"varint,2,opt,name=step,proto3" json:"step,omitempty"`
-	Screenshot    string                 `protobuf:"bytes,3,opt,name=screenshot,proto3" json:"screenshot,omitempty"`
-	Success       bool                   `protobuf:"varint,4,opt,name=success,proto3" json:"success,omitempty"`
-	Error         string                 `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"`
-	DeviceInfo    *DeviceInfo            `protobuf:"bytes,6,opt,name=device_info,json=deviceInfo,proto3" json:"device_info,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	TaskId         string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	Step           int32                  `protobuf:"varint,2,opt,name=step,proto3" json:"step,omitempty"`
+	Screenshot     string                 `protobuf:"bytes,3,opt,name=screenshot,proto3" json:"screenshot,omitempty"` // Deprecated: use screenshot_data instead
+	Success        bool                   `protobuf:"varint,4,opt,name=success,proto3" json:"success,omitempty"`
+	Error          string                 `protobuf:"bytes,5,opt,name=error,proto3" json:"error,omitempty"`
+	DeviceInfo     *DeviceInfo            `protobuf:"bytes,6,opt,name=device_info,json=deviceInfo,proto3" json:"device_info,omitempty"`
+	ScreenshotData []byte                 `protobuf:"bytes,7,opt,name=screenshot_data,json=screenshotData,proto3" json:"screenshot_data,omitempty"` // Binary screenshot data
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *ScreenshotResponse) Reset() {
@@ -963,6 +964,13 @@ func (x *ScreenshotResponse) GetError() string {
 func (x *ScreenshotResponse) GetDeviceInfo() *DeviceInfo {
 	if x != nil {
 		return x.DeviceInfo
+	}
+	return nil
+}
+
+func (x *ScreenshotResponse) GetScreenshotData() []byte {
+	if x != nil {
+		return x.ScreenshotData
 	}
 	return nil
 }
@@ -3030,7 +3038,7 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\x11ScreenshotRequest\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x12\n" +
 	"\x04step\x18\x02 \x01(\x05R\x04step\x12!\n" +
-	"\fexecution_id\x18\x03 \x01(\tR\vexecutionId\"\xc9\x01\n" +
+	"\fexecution_id\x18\x03 \x01(\tR\vexecutionId\"\xf2\x01\n" +
 	"\x12ScreenshotResponse\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x12\n" +
 	"\x04step\x18\x02 \x01(\x05R\x04step\x12\x1e\n" +
@@ -3040,7 +3048,8 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\asuccess\x18\x04 \x01(\bR\asuccess\x12\x14\n" +
 	"\x05error\x18\x05 \x01(\tR\x05error\x126\n" +
 	"\vdevice_info\x18\x06 \x01(\v2\x15.gameagent.DeviceInfoR\n" +
-	"deviceInfo\"\x8a\x01\n" +
+	"deviceInfo\x12'\n" +
+	"\x0fscreenshot_data\x18\a \x01(\fR\x0escreenshotData\"\x8a\x01\n" +
 	"\rActionRequest\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x12\n" +
 	"\x04step\x18\x02 \x01(\x05R\x04step\x12)\n" +
