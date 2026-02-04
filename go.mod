@@ -1,4 +1,4 @@
-module github.com/hellof20/joey-proto
+module github.com/hellof20/qira-proto
 
 go 1.24.3
 
