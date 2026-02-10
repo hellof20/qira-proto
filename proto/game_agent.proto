@@ -192,18 +192,21 @@ message Action {
     StartRecordingParams start_recording = 23;
     StopRecordingParams stop_recording = 24;
     SwipeParams swipe = 25;
+    ListAppsParams list_apps = 28;
   }
 }
 
 // ClickParams - 点击/触摸屏幕
 message ClickParams {
   Coordinates coordinates = 1;
+  string locate = 2;  // 元素描述（可选）
 }
 
 // TypeTextParams - 输入文本
 message TypeTextParams {
   Coordinates coordinates = 1;
   string content = 2;  // 输入内容
+  string locate = 3;   // 元素描述（可选）
 }
 
 // ScrollParams - 滚动屏幕
@@ -219,6 +222,7 @@ message ScrollAtParams {
   Coordinates coordinates = 1;
   string direction = 2;  // "up" or "down"
   int32 distance_px = 3;  // 滚动距离（像素）
+  string locate = 4;      // 元素描述（可选）
 }
 
 // NavigateParams - 导航（浏览器）
@@ -240,11 +244,13 @@ message PressKeyParams {
 message SearchParams {
   Coordinates coordinates = 1;
   string content = 2;  // 搜索内容
+  string locate = 3;   // 元素描述（可选）
 }
 
 // ClearTextParams - 清除文本
 message ClearTextParams {
   Coordinates coordinates = 1;
+  string locate = 2;  // 元素描述（可选）
 }
 
 // StartAppParams - 启动应用
@@ -325,4 +331,9 @@ message SwipeParams {
   Coordinates start = 1;
   Coordinates end = 2;
   int32 duration_ms = 3;
+}
+
+// ListAppsParams - 获取已安装应用列表
+message ListAppsParams {
+  // 无参数
 }

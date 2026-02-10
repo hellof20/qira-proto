@@ -1409,6 +1409,7 @@ type Action struct {
 	//	*Action_StartRecording
 	//	*Action_StopRecording
 	//	*Action_Swipe
+	//	*Action_ListApps
 	Params        isAction_Params `protobuf_oneof:"params"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1681,6 +1682,15 @@ func (x *Action) GetSwipe() *SwipeParams {
 	return nil
 }
 
+func (x *Action) GetListApps() *ListAppsParams {
+	if x != nil {
+		if x, ok := x.Params.(*Action_ListApps); ok {
+			return x.ListApps
+		}
+	}
+	return nil
+}
+
 type isAction_Params interface {
 	isAction_Params()
 }
@@ -1781,6 +1791,10 @@ type Action_Swipe struct {
 	Swipe *SwipeParams `protobuf:"bytes,25,opt,name=swipe,proto3,oneof"`
 }
 
+type Action_ListApps struct {
+	ListApps *ListAppsParams `protobuf:"bytes,28,opt,name=list_apps,json=listApps,proto3,oneof"`
+}
+
 func (*Action_Click) isAction_Params() {}
 
 func (*Action_TypeText) isAction_Params() {}
@@ -1829,10 +1843,13 @@ func (*Action_StopRecording) isAction_Params() {}
 
 func (*Action_Swipe) isAction_Params() {}
 
+func (*Action_ListApps) isAction_Params() {}
+
 // ClickParams - 点击/触摸屏幕
 type ClickParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Coordinates   *Coordinates           `protobuf:"bytes,1,opt,name=coordinates,proto3" json:"coordinates,omitempty"`
+	Locate        string                 `protobuf:"bytes,2,opt,name=locate,proto3" json:"locate,omitempty"` // 元素描述（可选）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1874,11 +1891,19 @@ func (x *ClickParams) GetCoordinates() *Coordinates {
 	return nil
 }
 
+func (x *ClickParams) GetLocate() string {
+	if x != nil {
+		return x.Locate
+	}
+	return ""
+}
+
 // TypeTextParams - 输入文本
 type TypeTextParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Coordinates   *Coordinates           `protobuf:"bytes,1,opt,name=coordinates,proto3" json:"coordinates,omitempty"`
 	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"` // 输入内容
+	Locate        string                 `protobuf:"bytes,3,opt,name=locate,proto3" json:"locate,omitempty"`   // 元素描述（可选）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1923,6 +1948,13 @@ func (x *TypeTextParams) GetCoordinates() *Coordinates {
 func (x *TypeTextParams) GetContent() string {
 	if x != nil {
 		return x.Content
+	}
+	return ""
+}
+
+func (x *TypeTextParams) GetLocate() string {
+	if x != nil {
+		return x.Locate
 	}
 	return ""
 }
@@ -2002,6 +2034,7 @@ type ScrollAtParams struct {
 	Coordinates   *Coordinates           `protobuf:"bytes,1,opt,name=coordinates,proto3" json:"coordinates,omitempty"`
 	Direction     string                 `protobuf:"bytes,2,opt,name=direction,proto3" json:"direction,omitempty"`                      // "up" or "down"
 	DistancePx    int32                  `protobuf:"varint,3,opt,name=distance_px,json=distancePx,proto3" json:"distance_px,omitempty"` // 滚动距离（像素）
+	Locate        string                 `protobuf:"bytes,4,opt,name=locate,proto3" json:"locate,omitempty"`                            // 元素描述（可选）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2055,6 +2088,13 @@ func (x *ScrollAtParams) GetDistancePx() int32 {
 		return x.DistancePx
 	}
 	return 0
+}
+
+func (x *ScrollAtParams) GetLocate() string {
+	if x != nil {
+		return x.Locate
+	}
+	return ""
 }
 
 // NavigateParams - 导航（浏览器）
@@ -2197,6 +2237,7 @@ type SearchParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Coordinates   *Coordinates           `protobuf:"bytes,1,opt,name=coordinates,proto3" json:"coordinates,omitempty"`
 	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"` // 搜索内容
+	Locate        string                 `protobuf:"bytes,3,opt,name=locate,proto3" json:"locate,omitempty"`   // 元素描述（可选）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2245,10 +2286,18 @@ func (x *SearchParams) GetContent() string {
 	return ""
 }
 
+func (x *SearchParams) GetLocate() string {
+	if x != nil {
+		return x.Locate
+	}
+	return ""
+}
+
 // ClearTextParams - 清除文本
 type ClearTextParams struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Coordinates   *Coordinates           `protobuf:"bytes,1,opt,name=coordinates,proto3" json:"coordinates,omitempty"`
+	Locate        string                 `protobuf:"bytes,2,opt,name=locate,proto3" json:"locate,omitempty"` // 元素描述（可选）
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -2288,6 +2337,13 @@ func (x *ClearTextParams) GetCoordinates() *Coordinates {
 		return x.Coordinates
 	}
 	return nil
+}
+
+func (x *ClearTextParams) GetLocate() string {
+	if x != nil {
+		return x.Locate
+	}
+	return ""
 }
 
 // StartAppParams - 启动应用
@@ -2973,6 +3029,43 @@ func (x *SwipeParams) GetDurationMs() int32 {
 	return 0
 }
 
+// ListAppsParams - 获取已安装应用列表
+type ListAppsParams struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListAppsParams) Reset() {
+	*x = ListAppsParams{}
+	mi := &file_proto_game_agent_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListAppsParams) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListAppsParams) ProtoMessage() {}
+
+func (x *ListAppsParams) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_game_agent_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListAppsParams.ProtoReflect.Descriptor instead.
+func (*ListAppsParams) Descriptor() ([]byte, []int) {
+	return file_proto_game_agent_proto_rawDescGZIP(), []int{42}
+}
+
 var File_proto_game_agent_proto protoreflect.FileDescriptor
 
 const file_proto_game_agent_proto_rawDesc = "" +
@@ -3083,7 +3176,7 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\bheadless\x18\x06 \x01(\bR\bheadless\")\n" +
 	"\vCoordinates\x12\f\n" +
 	"\x01x\x18\x01 \x01(\x05R\x01x\x12\f\n" +
-	"\x01y\x18\x02 \x01(\x05R\x01y\"\xd0\v\n" +
+	"\x01y\x18\x02 \x01(\x05R\x01y\"\x8a\f\n" +
 	"\x06Action\x12 \n" +
 	"\fwait_time_ms\x18\x1a \x01(\x05R\n" +
 	"waitTimeMs\x12-\n" +
@@ -3115,25 +3208,29 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\x06failed\x18\x16 \x01(\v2\x17.gameagent.FailedParamsH\x00R\x06failed\x12J\n" +
 	"\x0fstart_recording\x18\x17 \x01(\v2\x1f.gameagent.StartRecordingParamsH\x00R\x0estartRecording\x12G\n" +
 	"\x0estop_recording\x18\x18 \x01(\v2\x1e.gameagent.StopRecordingParamsH\x00R\rstopRecording\x12.\n" +
-	"\x05swipe\x18\x19 \x01(\v2\x16.gameagent.SwipeParamsH\x00R\x05swipeB\b\n" +
-	"\x06params\"G\n" +
+	"\x05swipe\x18\x19 \x01(\v2\x16.gameagent.SwipeParamsH\x00R\x05swipe\x128\n" +
+	"\tlist_apps\x18\x1c \x01(\v2\x19.gameagent.ListAppsParamsH\x00R\blistAppsB\b\n" +
+	"\x06params\"_\n" +
 	"\vClickParams\x128\n" +
-	"\vcoordinates\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\"d\n" +
+	"\vcoordinates\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\x12\x16\n" +
+	"\x06locate\x18\x02 \x01(\tR\x06locate\"|\n" +
 	"\x0eTypeTextParams\x128\n" +
 	"\vcoordinates\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\x12\x18\n" +
-	"\acontent\x18\x02 \x01(\tR\acontent\"\xa8\x01\n" +
+	"\acontent\x18\x02 \x01(\tR\acontent\x12\x16\n" +
+	"\x06locate\x18\x03 \x01(\tR\x06locate\"\xa8\x01\n" +
 	"\fScrollParams\x12\x1c\n" +
 	"\tdirection\x18\x01 \x01(\tR\tdirection\x12\x1f\n" +
 	"\vscroll_type\x18\x02 \x01(\tR\n" +
 	"scrollType\x12\x1f\n" +
 	"\vdistance_px\x18\x03 \x01(\x05R\n" +
 	"distancePx\x128\n" +
-	"\vcoordinates\x18\x04 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\"\x89\x01\n" +
+	"\vcoordinates\x18\x04 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\"\xa1\x01\n" +
 	"\x0eScrollAtParams\x128\n" +
 	"\vcoordinates\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\x12\x1c\n" +
 	"\tdirection\x18\x02 \x01(\tR\tdirection\x12\x1f\n" +
 	"\vdistance_px\x18\x03 \x01(\x05R\n" +
-	"distancePx\"\"\n" +
+	"distancePx\x12\x16\n" +
+	"\x06locate\x18\x04 \x01(\tR\x06locate\"\"\n" +
 	"\x0eNavigateParams\x12\x10\n" +
 	"\x03url\x18\x01 \x01(\tR\x03url\"-\n" +
 	"\n" +
@@ -3141,12 +3238,14 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\vduration_ms\x18\x01 \x01(\x05R\n" +
 	"durationMs\"\"\n" +
 	"\x0ePressKeyParams\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\"b\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\"z\n" +
 	"\fSearchParams\x128\n" +
 	"\vcoordinates\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\x12\x18\n" +
-	"\acontent\x18\x02 \x01(\tR\acontent\"K\n" +
+	"\acontent\x18\x02 \x01(\tR\acontent\x12\x16\n" +
+	"\x06locate\x18\x03 \x01(\tR\x06locate\"c\n" +
 	"\x0fClearTextParams\x128\n" +
-	"\vcoordinates\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\"+\n" +
+	"\vcoordinates\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\vcoordinates\x12\x16\n" +
+	"\x06locate\x18\x02 \x01(\tR\x06locate\"+\n" +
 	"\x0eStartAppParams\x12\x19\n" +
 	"\bapp_name\x18\x01 \x01(\tR\aappName\"*\n" +
 	"\rStopAppParams\x12\x19\n" +
@@ -3178,7 +3277,8 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\x05start\x18\x01 \x01(\v2\x16.gameagent.CoordinatesR\x05start\x12(\n" +
 	"\x03end\x18\x02 \x01(\v2\x16.gameagent.CoordinatesR\x03end\x12\x1f\n" +
 	"\vduration_ms\x18\x03 \x01(\x05R\n" +
-	"durationMs2Z\n" +
+	"durationMs\"\x10\n" +
+	"\x0eListAppsParams2Z\n" +
 	"\x10GameAgentService\x12F\n" +
 	"\fClientStream\x12\x18.gameagent.ClientMessage\x1a\x18.gameagent.ServerMessage(\x010\x01B,Z*github.com/hellof20/joey-proto/proto;protob\x06proto3"
 
@@ -3194,7 +3294,7 @@ func file_proto_game_agent_proto_rawDescGZIP() []byte {
 	return file_proto_game_agent_proto_rawDescData
 }
 
-var file_proto_game_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 42)
+var file_proto_game_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 43)
 var file_proto_game_agent_proto_goTypes = []any{
 	(*ClientMessage)(nil),          // 0: gameagent.ClientMessage
 	(*ServerMessage)(nil),          // 1: gameagent.ServerMessage
@@ -3238,6 +3338,7 @@ var file_proto_game_agent_proto_goTypes = []any{
 	(*StartRecordingParams)(nil),   // 39: gameagent.StartRecordingParams
 	(*StopRecordingParams)(nil),    // 40: gameagent.StopRecordingParams
 	(*SwipeParams)(nil),            // 41: gameagent.SwipeParams
+	(*ListAppsParams)(nil),         // 42: gameagent.ListAppsParams
 }
 var file_proto_game_agent_proto_depIdxs = []int32{
 	8,  // 0: gameagent.ClientMessage.register:type_name -> gameagent.RegisterRequest
@@ -3280,24 +3381,25 @@ var file_proto_game_agent_proto_depIdxs = []int32{
 	39, // 37: gameagent.Action.start_recording:type_name -> gameagent.StartRecordingParams
 	40, // 38: gameagent.Action.stop_recording:type_name -> gameagent.StopRecordingParams
 	41, // 39: gameagent.Action.swipe:type_name -> gameagent.SwipeParams
-	16, // 40: gameagent.ClickParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 41: gameagent.TypeTextParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 42: gameagent.ScrollParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 43: gameagent.ScrollAtParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 44: gameagent.SearchParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 45: gameagent.ClearTextParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 46: gameagent.RightClickParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 47: gameagent.HoverParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 48: gameagent.DoubleClickParams.coordinates:type_name -> gameagent.Coordinates
-	16, // 49: gameagent.SwipeParams.start:type_name -> gameagent.Coordinates
-	16, // 50: gameagent.SwipeParams.end:type_name -> gameagent.Coordinates
-	0,  // 51: gameagent.GameAgentService.ClientStream:input_type -> gameagent.ClientMessage
-	1,  // 52: gameagent.GameAgentService.ClientStream:output_type -> gameagent.ServerMessage
-	52, // [52:53] is the sub-list for method output_type
-	51, // [51:52] is the sub-list for method input_type
-	51, // [51:51] is the sub-list for extension type_name
-	51, // [51:51] is the sub-list for extension extendee
-	0,  // [0:51] is the sub-list for field type_name
+	42, // 40: gameagent.Action.list_apps:type_name -> gameagent.ListAppsParams
+	16, // 41: gameagent.ClickParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 42: gameagent.TypeTextParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 43: gameagent.ScrollParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 44: gameagent.ScrollAtParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 45: gameagent.SearchParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 46: gameagent.ClearTextParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 47: gameagent.RightClickParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 48: gameagent.HoverParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 49: gameagent.DoubleClickParams.coordinates:type_name -> gameagent.Coordinates
+	16, // 50: gameagent.SwipeParams.start:type_name -> gameagent.Coordinates
+	16, // 51: gameagent.SwipeParams.end:type_name -> gameagent.Coordinates
+	0,  // 52: gameagent.GameAgentService.ClientStream:input_type -> gameagent.ClientMessage
+	1,  // 53: gameagent.GameAgentService.ClientStream:output_type -> gameagent.ServerMessage
+	53, // [53:54] is the sub-list for method output_type
+	52, // [52:53] is the sub-list for method input_type
+	52, // [52:52] is the sub-list for extension type_name
+	52, // [52:52] is the sub-list for extension extendee
+	0,  // [0:52] is the sub-list for field type_name
 }
 
 func init() { file_proto_game_agent_proto_init() }
@@ -3347,6 +3449,7 @@ func file_proto_game_agent_proto_init() {
 		(*Action_StartRecording)(nil),
 		(*Action_StopRecording)(nil),
 		(*Action_Swipe)(nil),
+		(*Action_ListApps)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -3354,7 +3457,7 @@ func file_proto_game_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_game_agent_proto_rawDesc), len(file_proto_game_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   42,
+			NumMessages:   43,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
