@@ -710,6 +710,7 @@ type RegisterRequest struct {
 	Arch          string                 `protobuf:"bytes,9,opt,name=arch,proto3" json:"arch,omitempty"`
 	Version       string                 `protobuf:"bytes,10,opt,name=version,proto3" json:"version,omitempty"`
 	Headless      bool                   `protobuf:"varint,11,opt,name=headless,proto3" json:"headless,omitempty"`
+	OsVersion     string                 `protobuf:"bytes,12,opt,name=os_version,json=osVersion,proto3" json:"os_version,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -819,6 +820,13 @@ func (x *RegisterRequest) GetHeadless() bool {
 		return x.Headless
 	}
 	return false
+}
+
+func (x *RegisterRequest) GetOsVersion() string {
+	if x != nil {
+		return x.OsVersion
+	}
+	return ""
 }
 
 // ScreenshotRequest 截图请求
@@ -1246,6 +1254,7 @@ type DeviceInfo struct {
 	ClientName    string                 `protobuf:"bytes,4,opt,name=client_name,json=clientName,proto3" json:"client_name,omitempty"`
 	DeviceType    string                 `protobuf:"bytes,5,opt,name=device_type,json=deviceType,proto3" json:"device_type,omitempty"`
 	Headless      bool                   `protobuf:"varint,6,opt,name=headless,proto3" json:"headless,omitempty"`
+	OsVersion     string                 `protobuf:"bytes,7,opt,name=os_version,json=osVersion,proto3" json:"os_version,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1320,6 +1329,13 @@ func (x *DeviceInfo) GetHeadless() bool {
 		return x.Headless
 	}
 	return false
+}
+
+func (x *DeviceInfo) GetOsVersion() string {
+	if x != nil {
+		return x.OsVersion
+	}
+	return ""
 }
 
 // Coordinates - 屏幕坐标
@@ -3112,7 +3128,7 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\x0fCloseAppRequest\x12\x19\n" +
 	"\bapp_name\x18\x01 \x01(\tR\aappName\x12\x17\n" +
 	"\atask_id\x18\x02 \x01(\tR\x06taskId\x12!\n" +
-	"\fexecution_id\x18\x03 \x01(\tR\vexecutionId\"\xad\x02\n" +
+	"\fexecution_id\x18\x03 \x01(\tR\vexecutionId\"\xcc\x02\n" +
 	"\x0fRegisterRequest\x12\x1b\n" +
 	"\tclient_id\x18\x01 \x01(\tR\bclientId\x12\x1f\n" +
 	"\vclient_name\x18\x02 \x01(\tR\n" +
@@ -3127,7 +3143,9 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\x04arch\x18\t \x01(\tR\x04arch\x12\x18\n" +
 	"\aversion\x18\n" +
 	" \x01(\tR\aversion\x12\x1a\n" +
-	"\bheadless\x18\v \x01(\bR\bheadless\"c\n" +
+	"\bheadless\x18\v \x01(\bR\bheadless\x12\x1d\n" +
+	"\n" +
+	"os_version\x18\f \x01(\tR\tosVersion\"c\n" +
 	"\x11ScreenshotRequest\x12\x17\n" +
 	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12\x12\n" +
 	"\x04step\x18\x02 \x01(\x05R\x04step\x12!\n" +
@@ -3163,7 +3181,7 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"\tclient_id\x18\x01 \x01(\tR\bclientId\x12\x1c\n" +
 	"\ttimestamp\x18\x02 \x01(\x03R\ttimestamp\"1\n" +
 	"\x11HeartbeatResponse\x12\x1c\n" +
-	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\"\xb5\x01\n" +
+	"\ttimestamp\x18\x01 \x01(\x03R\ttimestamp\"\xd4\x01\n" +
 	"\n" +
 	"DeviceInfo\x12\x14\n" +
 	"\x05width\x18\x01 \x01(\x05R\x05width\x12\x16\n" +
@@ -3173,7 +3191,9 @@ const file_proto_game_agent_proto_rawDesc = "" +
 	"clientName\x12\x1f\n" +
 	"\vdevice_type\x18\x05 \x01(\tR\n" +
 	"deviceType\x12\x1a\n" +
-	"\bheadless\x18\x06 \x01(\bR\bheadless\")\n" +
+	"\bheadless\x18\x06 \x01(\bR\bheadless\x12\x1d\n" +
+	"\n" +
+	"os_version\x18\a \x01(\tR\tosVersion\")\n" +
 	"\vCoordinates\x12\f\n" +
 	"\x01x\x18\x01 \x01(\x05R\x01x\x12\f\n" +
 	"\x01y\x18\x02 \x01(\x05R\x01y\"\x8a\f\n" +
